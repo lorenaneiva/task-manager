@@ -1,0 +1,14 @@
+{% extends "task_managers/base.html" %}
+{%block content%}
+<h2><a href="{% url 'project' list.project.id %}">{{list.project}}</a></h2>
+<h2>{{list}}</h2>
+
+<form action="{% url 'new_task' list.id %}" method="post">
+{% csrf_token %}
+{{form.as_p}}
+
+<button type="submit">Criar</button>
+
+</form>
+
+{% endblock%}

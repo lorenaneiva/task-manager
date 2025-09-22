@@ -1,0 +1,56 @@
+{% extends "task_managers/base.html" %}
+{% block content %}
+
+<h2>{{project}}</h2>
+
+{% if project.deadline %}
+    <h3>{{project.deadline}}</h3>
+{% endif %}
+
+<a href="{% url 'new_list' project.id %}"> Criar listas </a>
+<h2>Listas: </h2>
+<ul>
+    {% for list in lists %}
+    <li>
+        
+        <h3>{{list.title}}</h3>
+        
+        <button><a href="{% url 'edit_list' list.id %}">Editar</a></button>
+        
+        <form action="{% url 'delete_list' project.id list.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Deletar</button>
+        </form>
+
+        {% if list.deadline %}
+            <h4>Prazo: {{ list.deadline }}</h4>
+        {% endif %}
+            <h4>Status: {{ list.get_status_display }}</h4>
+        <button><a href="{% url 'new_task' list.id %}"> adicionar tarefa </a></button>
+
+        <ol>
+            {% for task in list.tasks.all %}
+
+                <li><a href="{% url 'task' project.id task.id %}"> {{ task }} </a></li>
+                {%if task.deadline %}
+                    <p> <strong>Prazo</strong>: {{task.deadline}}</p>
+                {% endif %}
+
+                <button><a href="{% url 'edit_task' task.id%}">Editar</a></button>
+
+                <form action="{% url 'delete_task' project.id task.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Deletar</button>
+                </form>
+
+            {% empty %}
+            <li> não há nenhuma tarefa criada</li>
+            {% endfor %}
+        </ol>
+    </li>
+    {% empty %}
+    <li> não há nenhuma lista de tarefas criada </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

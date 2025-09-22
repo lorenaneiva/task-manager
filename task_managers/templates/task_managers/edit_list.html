@@ -1,0 +1,12 @@
+{% extends "task_managers/base.html" %}
+{%block content%}
+
+<form action="{% url 'edit_list' list.id %}" method="post">
+{% csrf_token %}
+{{form.as_p}}
+
+<button type="submit">editar</button>
+
+</form>
+
+{% endblock%}

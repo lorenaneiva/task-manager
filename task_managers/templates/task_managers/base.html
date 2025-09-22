@@ -1,0 +1,18 @@
+<header>
+    <a href="{% url 'index' %}">
+        <h1>Gerenciador de tarefas</h1>
+    </a>
+    <nav>
+        <a href="{% url 'projects' %}">
+            Projetos
+        </a>
+    </nav>
+    {% if user.is_authenticated %}
+        Olá, {{ user.username }}!! - <a href="{% url 'logout' %}"> Sair </a>
+    {% else %}
+    <a href="{% url 'login' %}">Entrar</a>
+    <a href="{% url 'register' %}">Registrar</a>
+    {% endif %}
+</header>
+{% block content %}
+{% endblock %}

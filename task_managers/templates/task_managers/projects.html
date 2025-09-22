@@ -1,0 +1,26 @@
+{% extends "task_managers/base.html" %}
+{% block content %}
+
+<p><a href="{% url 'new_project' %}">Adicionar projeto</a></p>
+<ul>
+    {% for project in projects %}
+        <li>
+            <p>
+                <a href="{% url 'project' project.id %}">{{ project }}</a>
+                {% if project.deadline != none %} 
+                    <p>Prazo: {{ project.deadline }}</p> 
+                {% endif %}
+                <p>Status: {{ project.get_status_display }}</p>
+                <button><a href="{% url 'edit_project' project.id %}">editar</a></button>
+            </p>
+        </li>
+        <form action="{% url 'delete_project' project.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Deletar</button>
+        </form>
+    {% empty %}
+        <li>Não há nenhum projeto criado</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
