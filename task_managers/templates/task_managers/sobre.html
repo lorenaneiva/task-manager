@@ -1,4 +1,37 @@
 {% extends "task_managers/base.html" %}
-{%block content%}
-<p>Sobre o site</p>
-{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow rounded-3">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Sobre o TasKnot</h2>
+          <p class="card-text">
+            O <strong>TasKnot</strong> é uma aplicação desenvolvida como desafio para a 
+            <em>startup Veloz</em>, com o objetivo de facilitar a organização de tarefas 
+            e projetos do dia a dia.  
+          </p>
+          <p class="card-text">
+            Com ele, você pode criar projetos, listas e tarefas de forma prática, 
+            mantendo tudo organizado em um só lugar. A ideia central é que cada tarefa 
+            seja como um "nó" em uma corda — todos entrelaçados para formar a sua rotina.
+          </p>
+          <h5 class="mt-4 text-center">Funcionalidades</h5>
+          <ul class="list-group text-center">
+            <li class="list-group-item">Criação e gerenciamento de projetos;</li>
+            <li class="list-group-item">Listas de tarefas por projeto;</li>
+            <li class="list-group-item">Definição de prazos e status;</li>
+            <li class="list-group-item">Interface simples e responsiva;</li>
+            <li class="list-group-item">Suporte a múltiplos usuários.</li>
+          </ul>
+          <p class="card-text mt-4">
+            Nosso objetivo é tornar a gestão do seu tempo e das suas responsabilidades
+            mais clara e eficiente, ajudando você a se concentrar no que realmente importa.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
