@@ -1,56 +1,95 @@
 {% extends "task_managers/base.html" %}
-{% block content %}
 
-<h2>{{project}}</h2>
+{% block content %}
+<h1 class="fw-bold text-center">{{ project }}</h1>
 
 {% if project.deadline %}
-    <h3>{{project.deadline}}</h3>
+  <h3>{{ project.deadline }}</h3>
 {% endif %}
 
-<a href="{% url 'new_list' project.id %}"> Criar listas </a>
-<h2>Listas: </h2>
-<ul>
-    {% for list in lists %}
-    <li>
-        
-        <h3>{{list.title}}</h3>
-        
-        <button><a href="{% url 'edit_list' list.id %}">Editar</a></button>
-        
-        <form action="{% url 'delete_list' project.id list.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Deletar</button>
-        </form>
+<div class="text-left mb-4">
+  <a href="{% url 'new_list' project.id %}" class="btn btn-outline-success">Nova lista</a>
+</div>
 
-        {% if list.deadline %}
-            <h4>Prazo: {{ list.deadline }}</h4>
-        {% endif %}
-            <h4>Status: {{ list.get_status_display }}</h4>
-        <button><a href="{% url 'new_task' list.id %}"> adicionar tarefa </a></button>
+<div class="row row-cols-1 row-cols-md-2 g-3">
+  {% for l in lists %}
+    <div class="col">
+      <div class="card h-100">
+        <div class="card-body d-flex flex-column">
 
-        <ol>
-            {% for task in list.tasks.all %}
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <h2 class="m-0">{{ l.title }}</h2>
+            <div class="d-flex gap-2 flex-shrink-0">
+              <a href="{% url 'new_task' l.id %}" class="btn btn-outline-success">adicionar tarefa</a>
+              <a href="{% url 'edit_list' l.id %}" class="btn btn-outline-primary">Editar</a>
+              <form action="{% url 'delete_list' project.id l.id %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Deletar</button>
+              </form>
+            </div>
+          </div>
 
-                <li><a href="{% url 'task' project.id task.id %}"> {{ task }} </a></li>
-                {%if task.deadline %}
-                    <p> <strong>Prazo</strong>: {{task.deadline}}</p>
-                {% endif %}
+          <!--Prazo da lista-->
+          {% if l.deadline %}
+            <p class="card-text fw-semibold mb-2"><span>{{ l.deadline }}</span></p>
+          {% else %}
+            <p class="card-text fw-semibold mb-2"><span>Lista sem prazo definido</span></p>
+          {% endif %}
 
-                <button><a href="{% url 'edit_task' task.id%}">Editar</a></button>
 
-                <form action="{% url 'delete_task' project.id task.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Deletar</button>
-                </form>
+          <!--Status da lista-->
+          <p class="card-text mb-3">
+            {% if l.get_status_display == "A fazer" %}
+              <span class="badge bg-warning text-dark fs-6">{{ l.get_status_display }}</span>
+            {% elif l.get_status_display == "Fazendo" %}
+              <span class="badge bg-primary fs-6">{{ l.get_status_display }}</span>
+            {% else %}
+              <span class="badge bg-success fs-6">{{ l.get_status_display }}</span>
+            {% endif %}
+          </p>
 
+          
+        <!--Tarefas-->
+          <div class="row g-3">
+            {% for task in l.tasks.all %}
+              <div class="col-12">
+                <div class="card">
+                  <div class="d-flex justify-content-between align-items-start p-3">
+                    <div>
+                      <a href="{% url 'task' project.id task.id %}"
+                         class="link-offset-2 link-underline link-underline-opacity-0">
+                        {{ task }}
+                      </a>
+                      {% if task.deadline %}
+                        <p class="card-text fw-semibold mb-0">{{ task.deadline }}</p>
+                      {% else %}
+                        <p class="card-text fw-semibold mb-0">Tarefa sem prazo definido</p>
+                      {% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                      <a href="{% url 'edit_task' task.list.id task.id  %}" class="btn btn-outline-primary">Editar</a>
+                      <form action="{% url 'delete_task' project.id task.id %}" method="post" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Deletar</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
             {% empty %}
-            <li> não há nenhuma tarefa criada</li>
+              <div class="col-12">
+                <p class="fw-bold fs-6 text-center text-uppercase mb-0">Não há nenhuma tarefa criada</p>
+              </div>
             {% endfor %}
-        </ol>
-    </li>
-    {% empty %}
-    <li> não há nenhuma lista de tarefas criada </li>
-    {% endfor %}
-</ul>
+          </div>
 
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <p class="fw-bold fs-5 text-center text-uppercase">Não há nenhuma lista de tarefas criada</p>
+    </div>
+  {% endfor %}
+</div>
 {% endblock %}

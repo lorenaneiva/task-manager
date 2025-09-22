@@ -1,10 +1,37 @@
 {% extends "task_managers/base.html" %}
 {% block content %}
-<h2><a href="{% url 'project' task.list.project.id %}">{{task.list.project}}: <br> Lista: {{ task.list }}</a></h2>
+<h1 class="fw-bold text-center">
+    <a href="{% url 'project' task.list.project.id %}"
+    class="link-offset-2 link-underline link-underline-opacity-0"
+    >
+    {{task.list.project}}
+    </a>
+</h1>
+<h3 class="fw-bold text-center"></h3>
 
-<h2> tarefa: {{task}}</h2>
-<h3>status: {{task.get_status_display}}</h3>
-
-<p>Descrição: {{task.description}}</p>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="d-flex justify-content-between">
+            <h2>
+                <a href="{% url 'project' task.list.project.id %}"
+                class="link-offset-2 link-underline link-underline-opacity-0"
+                >
+                {{task}}
+                </a>
+            </h2>
+                <p class="card-text">
+                    {% if task.get_status_display == "A fazer" %}
+                        <span class="badge bg-warning text-dark fs-6">{{ task.get_status_display }}</span>
+                    {% elif task.get_status_display == "Fazendo" %}
+                        <span class="badge bg-primary fs-6">{{ task.get_status_display }}</span>
+                    {% else %}
+                        <span class="badge bg-success fs-6">{{ task.get_status_display }}</span>
+                    {% endif %}
+                </p>
+        </div>
+        
+        <p>Descrição: {{task.description}}</p>
+    </div>
+</div>
 
 {% endblock %}

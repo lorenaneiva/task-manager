@@ -1,18 +1,104 @@
-<header>
-    <a href="{% url 'index' %}">
-        <h1>Gerenciador de tarefas</h1>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicação para gerenciar tarefas">
+    <meta name="keywords" content="gerenciar, gerenciador, gerenciamento, tarefa, tarefas, organização">
+    <meta name="author" content="Lorena Neiva">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>{% block title %}TasKnot{% endblock %}</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0e467a;">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand" href="{% url 'index' %}">
+      <img src="{% static 'img/Tasknot-Logo.png' %}" class="img-fluid m-2" alt="Tasknot" width="250">
     </a>
-    <nav>
-        <a href="{% url 'projects' %}">
-            Projetos
+
+    <!-- Botão mobile -->
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarMain"
+            aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav mb-2 mb-lg-0 fs-3">
+        <li class="nav-item">
+          <a href="{% url 'projects' %}" class="nav-link active">Projetos</a>
+        </li>
+       </ul>
+
+        {% if user.is_authenticated %}
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5">
+          <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link d-flex align-items-center">
+              <span class="material-icons me-1">logout</span>
+            </a>
+          </li>
+        </ul>
+        {% else %}
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5">
+           <li class="nav-item">
+                <a href="{% url 'login' %}"
+                class="nav-link active d-flex align-items-center "
+                >
+                    Entrar
+                </a>
+           </li>
+            <li class="nav-item">
+                <a href="{% url 'register' %}" 
+                class="nav-link active d-flex align-items-center"
+                >
+                    Registrar
+                </a>
+           </li>
+        </ul>
+
+        {% endif %}
+      
+    </div>
+  </div>
+</nav>
+
+<main class="flex-fill">
+    <div class="container py-5">
+      <div>
+        {% block header %}{% endblock header %}
+      </div>
+      {% block content %}{% endblock %}
+    </div>
+</main>
+
+<footer class=" text-center py-3 mt-auto">
+    {% block footer %}
+        <p class="mb-2">“Pronto para começar a organizar sua rotina?”</p>
+        <a href="{% url 'sobre' %}" class="btn btn-primary btn-sm me-2">
+            Sobre   
         </a>
-    </nav>
-    {% if user.is_authenticated %}
-        Olá, {{ user.username }}!! - <a href="{% url 'logout' %}"> Sair </a>
-    {% else %}
-    <a href="{% url 'login' %}">Entrar</a>
-    <a href="{% url 'register' %}">Registrar</a>
-    {% endif %}
-</header>
-{% block content %}
-{% endblock %}
+        <a 
+        href="https://api.whatsapp.com/send?phone=91987615365&text=Oi,%20Lorena!" 
+        class="btn btn-primary btn-sm me-2" 
+        target="_blank"
+        rel="external" 
+        >Contato</a>
+        <a 
+        href="https://github.com/lorenaneiva/task-manager" 
+        class="btn btn-primary btn-sm"
+        target="_blank"
+        rel="external"
+        >Github do projeto
+        </a>
+    {% endblock %}
+</footer>
+</body>
+</html>

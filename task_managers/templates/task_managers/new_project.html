@@ -1,12 +1,16 @@
 {% extends "task_managers/base.html" %}
 {%block content%}
+{% load django_bootstrap5 %}
+<h2 class="fw-bold text-center">Novo Projeto</h2>
 
-<form action="{% url 'new_project' %}" method="post">
-{% csrf_token %}
-{{form.as_p}}
-
-<button type="submit">Criar</button>
-
-</form>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <form action="{% url 'new_project' %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Criar</button>
+        </form>
+    </div>
+</div>
 
 {% endblock%}

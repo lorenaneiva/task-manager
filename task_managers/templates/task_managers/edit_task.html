@@ -1,12 +1,20 @@
 {% extends "task_managers/base.html" %}
 {%block content%}
-
-<form action="{% url 'edit_task' task.id %}" method="post">
-{% csrf_token %}
-{{form.as_p}}
-
-<button type="submit">editar</button>
-
-</form>
+{% load django_bootstrap5 %}
+<h1 class="fw-bold text-center">
+    <a href="{% url 'project' task.list.project.id %}"
+    class="link-offset-2 link-underline link-underline-opacity-0"
+    >{{task.list.project}}</a>
+</h1>
+<h3 class="fw-bold text-center">Editar tarefa</h3>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <form action="{% url 'edit_task' task.id task.list.id %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">editar</button>
+        </form>
+    </div>
+</div>
 
 {% endblock%}

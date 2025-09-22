@@ -1,16 +1,22 @@
 {% extends "task_managers/base.html" %}
 
 {%block content%}
+{% load django_bootstrap5 %}
 
 {%if form.errors %}
         <p>Seu login ou senha estão incorretos. Por favor, tente novamente.</p>
 {% endif %}
 
-<form action="{% url 'login' %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p}}
-    <button type="submit">Entrar</button>
-    <input type="hidden" name="next" value="{% url 'index' %}">
-</form>
+<div class="row justify-content-center">
+    <h2 class="fw-bold text-center">Login</h2>
+    <div class="col-md-5">
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <input type="hidden" name="next" value="{% url 'index' %}">
+        </form>
+    </div>
+</div>
 
 {% endblock %}

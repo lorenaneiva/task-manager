@@ -11,6 +11,8 @@ from django.contrib import messages
 def index(request):
     return render(request, 'task_managers/index.html')
 
+###         projects
+
 @login_required
 def projects(request):
     projects = Project.objects.filter(owner=request.user).order_by('date_added')
@@ -63,6 +65,8 @@ def delete_project(request, project_id):
         return redirect('projects')
     return render(request, 'task_managers/confirm_delete.html', {'project':project})
 
+###         lists
+
 @login_required
 def new_list(request, project_id):
     project = Project.objects.get(id = project_id)
@@ -100,9 +104,11 @@ def delete_list(request, project_id, list_id):
         return redirect('project', project_id=project_id)
     return render(request, 'task_managers/confirm_delete.html', {'list':list})
 
+###         tasks
+
 @login_required
 def task(request, project_id, task_id):
-    task = Task.objects.get(id = task_id)
+    task = get_object_or_404(Task, id=task_id)
     context = {'task': task}
     return render(request, 'task_managers/task.html', context)
 
@@ -122,15 +128,15 @@ def new_task(request, list_id):
     return render(request, 'task_managers/new_task.html', context)
 
 @login_required
-def edit_task(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
+def edit_task(request, list_id, task_id):
+    task = get_object_or_404(Task, id=task_id, list_id=list_id)
     form = TaskForm(request.POST or None, instance=task)
     if form.is_valid():
         form.save()
-        messages.sucess(request, 'Tarefa atualizada com sucesso')
-        return HttpResponseRedirect(reverse('projects'))    
-    context = {'form':form, 'task':task}
-    return render(request,'task_managers/edit_task.html', context) 
+        messages.success(request, 'Tarefa atualizada com sucesso')
+        return redirect('project', project_id=task.list.project.id)
+
+    return render(request, 'task_managers/edit_task.html', {'form': form, 'task': task})
 
 @login_required
 def delete_task(request, task_id, project_id):
