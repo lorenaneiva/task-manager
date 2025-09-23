@@ -20,7 +20,7 @@ urlpatterns = [
     #tasks
     path('projects/<int:project_id>/<int:task_id>', views.task, name='task'), 
     path('newtask/<int:list_id>', views.new_task, name='new_task'), 
-    path('task/edit/<int:list_id>/<int:task_id>', views.edit_task, name='edit_task'), 
+    path('task/edit/<int:project_id>/<int:task_id>', views.edit_task, name='edit_task'), 
     path('projects/<int:project_id>/tasks/<int:task_id>/delete', views.delete_task, name='delete_task'), 
 
     #sobre a aplicação

@@ -9,6 +9,10 @@ def validate_deadline(value):
     if value < date.today():
         raise ValidationError("Não é possível selecionar uma data passada.")
 
+def validate_fields(value):
+    if value == None:
+        raise ValidationError("Por favor, preencha os campos.")
+
 class Project(models.Model):
     STATUS_CHOICES=[
     ("to-do", "A fazer"),

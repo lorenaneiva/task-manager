@@ -32,9 +32,9 @@
 
     <!-- Links -->
     <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav mb-2 mb-lg-0 fs-3">
+      <ul class="navbar-nav mb-2 mb-lg-0 fs-5">
         <li class="nav-item">
-          <a href="{% url 'projects' %}" class="nav-link active">Projetos</a>
+          <a href="{% url 'projects' %}" class="nav-link ">Projetos</a>
         </li>
        </ul>
 
@@ -75,6 +75,11 @@
       <div>
         {% block header %}{% endblock header %}
       </div>
+      {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
       {% block content %}{% endblock %}
     </div>
 </main>

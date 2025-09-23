@@ -40,7 +40,7 @@
 
           <!-- botões -->
           <div class="d-flex gap-2 mt-auto">
-            <a href="{% url 'edit_project' project.id %}" class="btn btn-outline-primary">Editar</a>
+            <a href="{% url 'project' project.id %}" class="btn btn-outline-primary">Editar</a>
             <form action="{% url 'delete_project' project.id %}" method="post" class="d-inline">
               {% csrf_token %}
               <button type="submit" class="btn btn-danger">Deletar</button>

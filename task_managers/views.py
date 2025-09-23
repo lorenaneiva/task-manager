@@ -20,7 +20,7 @@ def projects(request):
     return render(request, 'task_managers/projects.html',context)
 
 @login_required
-def project (request, project_id):
+def project(request, project_id):
     project = Project.objects.get(id = project_id)
     lists = project.lists.order_by('-date_added')
     context = {'project':project,'lists':lists}
@@ -61,7 +61,7 @@ def delete_project(request, project_id):
 
     if request.method == 'POST':
         project.delete()
-        messages.success(request,'Projeto deletado com sucesso!')
+        messages.error(request,'Projeto deletado com sucesso!')
         return redirect('projects')
     return render(request, 'task_managers/confirm_delete.html', {'project':project})
 
@@ -100,7 +100,7 @@ def delete_list(request, project_id, list_id):
 
     if request.method == 'POST':
         list.delete()
-        messages.success(request,'Lista deletada com sucesso!')
+        messages.error(request,'Lista deletada com sucesso!')
         return redirect('project', project_id=project_id)
     return render(request, 'task_managers/confirm_delete.html', {'list':list})
 
@@ -123,18 +123,18 @@ def new_task(request, list_id):
             form.save()
             messages.success(request,'Tarefa criada com sucesso!')
             return HttpResponseRedirect(reverse('project', args=[list.project_id]))
-        
+
     context = {'list': list,'form': form}
     return render(request, 'task_managers/new_task.html', context)
 
 @login_required
-def edit_task(request, list_id, task_id):
-    task = get_object_or_404(Task, id=task_id, list_id=list_id)
+def edit_task(request, project_id, task_id):
+    task = get_object_or_404(Task, id=task_id)
     form = TaskForm(request.POST or None, instance=task)
     if form.is_valid():
         form.save()
         messages.success(request, 'Tarefa atualizada com sucesso')
-        return redirect('project', project_id=task.list.project.id)
+        return redirect('task', project_id=project_id, task_id=task_id)
 
     return render(request, 'task_managers/edit_task.html', {'form': form, 'task': task})
 
@@ -144,7 +144,7 @@ def delete_task(request, task_id, project_id):
 
     if request.method == 'POST':
         task.delete()
-        messages.success(request,'Tarefa deletada com sucesso!')
+        messages.error(request,'Tarefa deletada com sucesso!')
         return redirect('project', project_id=project_id)
     return render(request, 'task_managers/confirm_delete.html', {'task':task})
 
