@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
-from django.db.models import Q # or ou and em filtros
 
 def index(request):
     return render(request, 'task_managers/index.html')
@@ -16,15 +15,19 @@ def index(request):
 
 @login_required
 def projects(request):
-    projects = (Project.objects
-                        # mostra os projetos q participa
-                .filter(Q(owner=request.user) | Q(project_members__participants=request.user))
-                .distinct() # remove duplicatas
-                .select_related('owner') # JOIN 
-                .prefetch_related('project_members__participants')
-                .order_by('-date_added')
-                )
-    context = {'projects':projects}
+    owner_projects = (Project.objects
+                      .filter(owner=request.user)
+                      .distinct()
+                      .select_related('owner')
+                      .order_by('-date_added')
+                      )
+    member_projects = (Project.objects
+                      .filter(project_members__participants=request.user) # busca os participantes
+                      .distinct()
+                      .select_related('owner')
+                      .order_by('-date_added')
+                      )
+    context = {'owner_projects':owner_projects,'member_projects':member_projects}
     return render(request, 'task_managers/projects.html',context)
 
 @login_required
