@@ -19,14 +19,14 @@ def index(request):
 def projects(request):
     owner_projects = (Project.objects
                       .filter(owner=request.user)
-                      .distinct()
-                      .select_related('owner')
+                      .distinct() # evita duplicação
+                      .select_related('owner') # otimização de busca da FK
                       .order_by('-date_added')
                       )
     member_projects = (Project.objects
                       .filter(project_members__participants=request.user) # busca os participantes
-                      .distinct()
-                      .select_related('owner')
+                      .distinct() 
+                      .select_related('owner') 
                       .order_by('-date_added')
                       )
     context = {'owner_projects':owner_projects,'member_projects':member_projects}
@@ -35,8 +35,21 @@ def projects(request):
 @login_required
 def project(request, project_id):
     project = Project.objects.get(id = project_id)
+
+   
+    membership = ProjectMember.objects.filter(project=project,participants=request.user).first()
+                            
+    is_owner = (request.user == project.owner)
+
+    can_edit = (membership and membership.role == 'participant')
+    can_invite = is_owner
     lists = project.lists.order_by('-date_added')
-    context = {'project':project,'lists':lists}
+    context = {
+        'project':project,
+        'lists':lists, 
+        'can_edit':can_edit,
+        'can_invite':can_invite,
+        }
     return render(request, 'task_managers/project.html', context)   
 
 @login_required
@@ -111,7 +124,7 @@ def invites_list(request):
     # traz os dados das FK  
     invites = (ProjectInvitation.objects
                .filter(guest=request.user, status='pending')   # Query
-               .select_related('project', 'inviter'))        #JOIN nas FKs (otimiza)                           
+               .select_related('project', 'inviter'))        # otimizando as buscas                         
     context = {'invites':invites}
     return render (request, "task_managers/invites_list.html", context)
 
@@ -121,7 +134,6 @@ def invites_accept(request, pk):
         return redirect('invites_list')
     else: 
         invite = get_object_or_404(ProjectInvitation, pk=pk, guest=request.user, status='pending')
-        # garantia de que todas as operações dentro de determinado contexto sejam executadas e finalizadas
         # se tiver algum erro as operações anteriores são canceladas
         with transaction.atomic():
             invite.status = 'accepted'
