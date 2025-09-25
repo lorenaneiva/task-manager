@@ -89,7 +89,6 @@ def edit_project (request, project_id):
 
 @login_required
 def delete_project(request, project_id):
-    projectInvitation = get_object_or_404 
     project = get_object_or_404(Project, id=project_id)
 
     if request.method == 'POST':
