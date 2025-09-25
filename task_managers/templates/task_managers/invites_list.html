@@ -14,7 +14,20 @@
     {% if invites %}
     <ul>
         {% for inv in invites %}
-            
+         <li>
+             <h4>
+                 Você aceita o convite para o projeto {{inv.project}}? <br>
+                 Feito pelo {{inv.inviter}}.
+             </h4>
+             <form action="{% url 'invites_accept' inv.pk %}" method="post">
+                {% csrf_token %}
+                    <button type="submit">Aceitar</button>
+             </form>
+             <form action="{% url 'invites_reject' inv.pk %}" method="post">
+                {% csrf_token %}
+                    <button type="submit">Rejeitar</button>
+             </form>
+            </li>
     {% endfor %}    
     </ul>
     {% else %}

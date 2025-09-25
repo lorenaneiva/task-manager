@@ -72,7 +72,7 @@ def invite(request, project_id):
     if request.method != 'POST':
         form = ProjectInvitationForm()
     else:
-        form = ProjectInvitationForm(request.POST)
+        form = ProjectInvitationForm(request.POST, project=project)
         form.instance.project = project
         form.instance.inviter = request.user
         if form.is_valid():
@@ -81,6 +81,15 @@ def invite(request, project_id):
             return HttpResponseRedirect(reverse('project', args=[project_id]))
     context = {'project':project,'form': form}
     return render(request, 'task_managers/invite.html', context) 
+@login_required
+def invites_list(request):
+    # filtrando os convites pendentes do usario logado
+    # traz os dados das FK  
+    invites = (ProjectInvitation.objects
+               .filter(guest=request.user, status='pending')   # Query
+               .select_related('project', 'inviter'))        #JOIN nas FKs (otimiza)                           
+    context = {'invites':invites}
+    return render (request, "task_managers/invites_list.html", context)
 
 def invites_accept(request, pk):
     if request.method != "POST":
@@ -92,7 +101,7 @@ def invites_accept(request, pk):
         with transaction.atomic():
             invite.status = 'accepted'
             invite.save(update_fields=['status'])
-            ProjectMember.objects.object.get_or_create(
+            ProjectMember.objects.get_or_create(
                 project = invite.project,
                 participants=request.user,
                 defaults={'role':'participant'}
@@ -110,17 +119,6 @@ def invites_reject(request, pk):
         invite.save(update_fields=['status'])
         messages.info(request, "Convite rejeitado")    
         return redirect('invites_list')   
-
-
-@login_required
-def invites_list(request):
-    # filtrando os convites pendentes do usario logado
-    # traz os dados das FK  
-    invites = (ProjectInvitation.objects
-               .filter(guest=request.user, status='pending')   # Query
-               .select_related('project', 'inviter'))        #JOIN nas FKs (otimiza)                           
-    context = {'invites':invites}
-    return render (request, "task_managers/invites_list.html", context)
 
 ###         lists
 

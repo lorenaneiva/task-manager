@@ -1,5 +1,5 @@
 from django import forms
-from .models import Project, List, Task, ProjectInvitation, ProjectMember
+from .models import Project, List, Task, ProjectInvitation
 
 class ProjectForm(forms.ModelForm):
     deadline = forms.DateField(
@@ -34,10 +34,18 @@ class TaskForm(forms.ModelForm):
     
     class Meta():
         model = Task
-        fields = ['title', 'status', 'deadline', 'description']
+        fields = ['title', 'status', 'deadline', 'assigned', 'description',]
         labels = {'title': 'Nome', 'status': 'Status'}
 
 class ProjectInvitationForm(forms.ModelForm):
     class Meta():
         model = ProjectInvitation
         fields = ['guest','role']
+    #construtor, lista de argumentos, dicionario com argumentos
+    def __init__(self, *args, **kwargs): 
+        project = kwargs.pop('project', None) # retirando a chave do dic.
+        # constr. da classe mae, criando os campos para acessa-los
+        super().__init__(*args, **kwargs) 
+        if project:
+            # filtrando o que aparece no campo
+            self.fields['assigned'].queryset = project.project_participants.all()
