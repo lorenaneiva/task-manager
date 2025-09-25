@@ -29,20 +29,22 @@ def projects(request):
                       .select_related('owner') 
                       .order_by('-date_added')
                       )
-    context = {'owner_projects':owner_projects,'member_projects':member_projects}
+    has_member = member_projects.exists()
+    context = {'owner_projects':owner_projects,
+               'member_projects':member_projects,
+               'has_member':has_member
+               }
     return render(request, 'task_managers/projects.html',context)
 
 @login_required
 def project(request, project_id):
     project = Project.objects.get(id = project_id)
-
-   
     membership = ProjectMember.objects.filter(project=project,participants=request.user).first()
                             
     is_owner = (request.user == project.owner)
-
-    can_edit = (membership and membership.role == 'participant')
+    can_edit = membership.role == 'participant'
     can_invite = is_owner
+
     lists = project.lists.order_by('-date_added')
     context = {
         'project':project,
@@ -140,7 +142,7 @@ def invites_accept(request, pk):
             ProjectMember.objects.get_or_create(
                 project = invite.project,
                 participants=request.user,
-                defaults={'role':'participant'}
+                role = invite.role
             )
         messages.success(request, "Você entrou no projeto!")
         return redirect("invites_list")
