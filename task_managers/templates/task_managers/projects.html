@@ -1,9 +1,9 @@
 {% extends "task_managers/base.html" %}
 
 {% block header %}
-  <div class="text-left mb-4">
+  <div class="text-left mb-4 d-flex justify-content-between">
     <a href="{% url 'new_project' %}" class="btn btn-outline-success">Novo projeto</a>
-    <a href="{% url 'invites_list' %}" class="btn btn-outline-success">Convites pendentes</a>
+    <a href="{% url 'invites_list' %}" class="btn btn-success">Convites pendentes</a>
   </div>
 {% endblock header %}
 
