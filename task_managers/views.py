@@ -11,7 +11,9 @@ from django.db import transaction
 def index(request):
     return render(request, 'task_managers/index.html')
 
+
 ###         projects
+
 
 @login_required
 def projects(request):
@@ -83,6 +85,10 @@ def delete_project(request, project_id):
         return redirect('projects')
     return render(request, 'task_managers/confirm_delete.html', {'project':project})
 
+
+###         convites
+
+
 @login_required
 def invite(request, project_id):
     project = get_object_or_404(Project, id=project_id)
@@ -98,6 +104,7 @@ def invite(request, project_id):
             return HttpResponseRedirect(reverse('project', args=[project_id]))
     context = {'project':project,'form': form}
     return render(request, 'task_managers/invite.html', context) 
+
 @login_required
 def invites_list(request):
     # filtrando os convites pendentes do usario logado
@@ -108,6 +115,7 @@ def invites_list(request):
     context = {'invites':invites}
     return render (request, "task_managers/invites_list.html", context)
 
+@login_required
 def invites_accept(request, pk):
     if request.method != "POST":
         return redirect('invites_list')
@@ -126,6 +134,7 @@ def invites_accept(request, pk):
         messages.success(request, "Você entrou no projeto!")
         return redirect("invites_list")
 
+@login_required
 def invites_reject(request, pk):
     if request.method != 'POST':
         return redirect('invites_list')
@@ -136,6 +145,7 @@ def invites_reject(request, pk):
         invite.save(update_fields=['status'])
         messages.info(request, "Convite rejeitado")    
         return redirect('invites_list')   
+
 
 ###         lists
 
