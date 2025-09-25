@@ -65,11 +65,13 @@ def new_project(request):
                 new_project = form.save(commit=False)
                 new_project.owner = request.user 
                 new_project.save()
-                ProjectMember.objects.get_or_create(
+                new_member = ProjectMember.objects.get_or_create(
                     project = new_project,
                     participants=request.user,
                     defaults={'role':'participant'}
                 )
+
+
             messages.success(request,'Projeto criado com sucesso!')
             return HttpResponseRedirect(reverse('projects'))
         
@@ -139,11 +141,15 @@ def invites_accept(request, pk):
         with transaction.atomic():
             invite.status = 'accepted'
             invite.save(update_fields=['status'])
-            ProjectMember.objects.get_or_create(
+            # instancia encontrada / boolean 
+            member, created = ProjectMember.objects.get_or_create(
                 project = invite.project,
                 participants=request.user,
-                role = invite.role
-            )
+                defaults={'role': invite.role}
+                )
+            if not created and member.role != invite.role:
+                member.role = invite.role 
+                member.save()
         messages.success(request, "Você entrou no projeto!")
         return redirect("invites_list")
 
