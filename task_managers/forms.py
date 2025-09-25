@@ -1,5 +1,5 @@
 from django import forms
-from .models import Project, List, Task
+from .models import Project, List, Task, ProjectInvitation, ProjectMember
 
 class ProjectForm(forms.ModelForm):
     deadline = forms.DateField(
@@ -36,3 +36,8 @@ class TaskForm(forms.ModelForm):
         model = Task
         fields = ['title', 'status', 'deadline', 'description']
         labels = {'title': 'Nome', 'status': 'Status'}
+
+class ProjectInvitationForm(forms.ModelForm):
+    class Meta():
+        model = ProjectInvitation
+        fields = ['guest','role']

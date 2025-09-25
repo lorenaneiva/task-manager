@@ -1,0 +1,23 @@
+{% extends "task_managers/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block header %}
+<h1 class="fw-bold text-center">
+    <a href="{% url 'projects' %}"
+    class="link-offset-2 link-underline link-underline-opacity-0"
+    >Convites pendentes</a>
+</h1>
+<h3 class="fw-bold text-center">Participe ou não de outros projetos!</h3>
+{% endblock header %}
+
+{%block content%}
+    {% if invites %}
+    <ul>
+        {% for inv in invites %}
+
+    {% endfor %}    
+    </ul>
+    {% else %}
+        <p class="text-center m-5">Você não tem convites pendentes!</p>
+    {% endif %}
+{% endblock%}

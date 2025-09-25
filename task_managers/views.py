@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from .models import Project, List,Task
-from .forms import ProjectForm, ListForm, TaskForm
+from .models import Project, List, Task, ProjectInvitation, ProjectMember
+from .forms import ProjectForm, ListForm, TaskForm, ProjectInvitationForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from django.db import transaction
 
 def index(request):
     return render(request, 'task_managers/index.html')
@@ -57,6 +57,7 @@ def edit_project (request, project_id):
 
 @login_required
 def delete_project(request, project_id):
+    projectInvitation = get_object_or_404 
     project = get_object_or_404(Project, id=project_id)
 
     if request.method == 'POST':
@@ -65,7 +66,53 @@ def delete_project(request, project_id):
         return redirect('projects')
     return render(request, 'task_managers/confirm_delete.html', {'project':project})
 
+@login_required
+def invite(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    if request.method != 'POST':
+        form = ProjectInvitationForm()
+    else:
+        form = ProjectInvitationForm(request.POST)
+        form.instance.project = project
+        form.instance.inviter = request.user
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Usuário convidado com sucesso!')
+            return HttpResponseRedirect(reverse('project', args=[project_id]))
+    context = {'project':project,'form': form}
+    return render(request, 'task_managers/invite.html', context) 
+
+def invites_accept(request, pk):
+    if request.method != "POST":
+        return redirect('invites_list')
+
+    invite = get_object_or_404(ProjectInvitation, pk=pk, guest=request.user, status='pending')
+
+    # garantia de que todas as operações dentro de determinado contexto sejam executadas e finalizadas
+    # se tiver algum erro as operações anteriores são canceladas
+    with transaction.atomic():
+        invite.status = 'accepted'
+        invite.save(update_fields=['status'])
+        ProjectMember.objects.object.get_or_create(
+            project = invite.project,
+            participants=request.user,
+            defaults={'role':'participant'}
+        )
+    messages.success(request, "Você entrou no projeto!")
+    return redirect("invites_list")
+
+@login_required
+def invites_list(request):
+    # filtrando os convites pendentes do usario logado
+    # traz os dados das FK  
+    invites = (ProjectInvitation.objects
+               .filter(guest=request.user, status='pending')   # Query
+               .select_related('project', 'inviter'))        #JOIN nas FKs (otimiza)                           
+    context = {'invites':invites}
+    return render (request, "task_managers/invites_list.html", context)
+
 ###         lists
+
 
 @login_required
 def new_list(request, project_id):
@@ -104,7 +151,11 @@ def delete_list(request, project_id, list_id):
         return redirect('project', project_id=project_id)
     return render(request, 'task_managers/confirm_delete.html', {'list':list})
 
+
+
 ###         tasks
+
+
 
 @login_required
 def task(request, project_id, task_id):

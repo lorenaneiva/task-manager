@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
+    #home
     path('', views.index, name='index'),
 
     #projects
@@ -11,8 +12,13 @@ urlpatterns = [
     path('newproject', views.new_project, name='new_project'), 
     path('projects/edit/<int:project_id>', views.edit_project, name='edit_project'),
     path('projects/<int:project_id>/delete', views.delete_project, name='delete_project'), 
+    # invites
+    path('projects/<int:project_id>/invite', views.invite, name='invite'), 
+    path('projects/invites/', views.invites_list, name='invites_list'), 
+    path('projects/<int:pk>/accept', views.invites_accept, name='invites_accept'), 
+    
 
-    #lists
+    #taskslists
     path('newlist/<int:project_id>', views.new_list, name='new_list'), 
     path('list/edit/<int:list_id>',views.edit_list, name='edit_list'),
     path('projects/<int:project_id>/lists/<int:list_id>/delete', views.delete_list, name='delete_list'), 
