@@ -85,21 +85,32 @@ def invite(request, project_id):
 def invites_accept(request, pk):
     if request.method != "POST":
         return redirect('invites_list')
+    else: 
+        invite = get_object_or_404(ProjectInvitation, pk=pk, guest=request.user, status='pending')
+        # garantia de que todas as operações dentro de determinado contexto sejam executadas e finalizadas
+        # se tiver algum erro as operações anteriores são canceladas
+        with transaction.atomic():
+            invite.status = 'accepted'
+            invite.save(update_fields=['status'])
+            ProjectMember.objects.object.get_or_create(
+                project = invite.project,
+                participants=request.user,
+                defaults={'role':'participant'}
+            )
+        messages.success(request, "Você entrou no projeto!")
+        return redirect("invites_list")
 
-    invite = get_object_or_404(ProjectInvitation, pk=pk, guest=request.user, status='pending')
+def invites_reject(request, pk):
+    if request.method != 'POST':
+        return redirect('invites_list')
+    else:
+        invite = get_object_or_404(ProjectInvitation, pk=pk, guest=request.user, status='pending')
 
-    # garantia de que todas as operações dentro de determinado contexto sejam executadas e finalizadas
-    # se tiver algum erro as operações anteriores são canceladas
-    with transaction.atomic():
-        invite.status = 'accepted'
+        invite.status = 'rejected'
         invite.save(update_fields=['status'])
-        ProjectMember.objects.object.get_or_create(
-            project = invite.project,
-            participants=request.user,
-            defaults={'role':'participant'}
-        )
-    messages.success(request, "Você entrou no projeto!")
-    return redirect("invites_list")
+        messages.info(request, "Convite rejeitado")    
+        return redirect('invites_list')   
+
 
 @login_required
 def invites_list(request):

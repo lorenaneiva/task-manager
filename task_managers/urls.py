@@ -16,6 +16,7 @@ urlpatterns = [
     path('projects/<int:project_id>/invite', views.invite, name='invite'), 
     path('projects/invites/', views.invites_list, name='invites_list'), 
     path('projects/<int:pk>/accept', views.invites_accept, name='invites_accept'), 
+    path('projects/<int:pk>/reject', views.invites_reject, name='invites_reject'), 
     
 
     #taskslists
