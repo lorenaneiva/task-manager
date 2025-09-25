@@ -33,9 +33,15 @@ def new_project(request):
     else:
         form = ProjectForm(request.POST) # dados dos campos enviados
         if form.is_valid():
-            new_project = form.save(commit=False)
-            new_project.owner = request.user 
-            new_project.save()
+            with transaction.atomic(): # se tiver algum erro as operações anteriores são canceladas
+                new_project = form.save(commit=False)
+                new_project.owner = request.user 
+                new_project.save()
+                ProjectMember.objects.get_or_create(
+                    project = new_project,
+                    participants=request.user,
+                    defaults={'role':'participant'}
+                )
             messages.success(request,'Projeto criado com sucesso!')
             return HttpResponseRedirect(reverse('projects'))
         
