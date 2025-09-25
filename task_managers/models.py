@@ -93,7 +93,10 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
+    # prazo da tarefa
     deadline = models.DateField(blank=True, null=True, validators=[validate_deadline])
+    # responsavel atribuido a tarefa (opicional) 
+    assigned = models.ForeignKey(ProjectMember, on_delete=models.SET_NULL, blank=True, null=True, related_name='assigned_tasks')
 
     def __str__(self):
         return self.title
@@ -107,6 +110,11 @@ class Task(models.Model):
                 if self.deadline > self.list.deadline:
                     raise ValidationError("O prazo da tarefa não pode passar do prazo da lista")    
                 
+        # validação para coerencia 
+        if (self.assigned): 
+            if self.assigned.project != self.list.project: 
+                raise ValidationError("O projeto da tarefa deve ser o mesmo projeto do responsável.")
+
 class ProjectInvitation(models.Model): 
     # projeto 
     project = models.ForeignKey(
@@ -158,10 +166,11 @@ class ProjectInvitation(models.Model):
         # bloqueio de convites para já membros 
         if self.guest: 
             # procura as instancias, dentro dos campos, numa mesma linha 
-            qs = ProjectMember.objects.filter( 
+            is_member = ProjectMember.objects.filter( 
                 project = self.project, 
                 participants = self.guest ).exists() # -> retorna True (se achar) ou False (se não) 
-            if qs: 
+            
+            if is_member: 
                 raise ValidationError("Usuário já é membro deste projeto.") 
             # bloqueio de convites duplicados 
             if self.status == 'pending': 
@@ -173,7 +182,8 @@ class ProjectInvitation(models.Model):
                     # prevenção de erro 
                     # # exclude remove a qs especifica, para nao contar com o proprio registro 
                     qs = qs.exclude(pk=self.pk) 
-                    if qs.exists(): # se existir -> erro 
+
+                if qs.exists(): # se existir -> erro 
                         raise ValidationError("Já existe um convite pendente para este usuário.") 
     
     def __str__(self): 
