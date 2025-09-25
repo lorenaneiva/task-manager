@@ -30,6 +30,8 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+# model intermediario N:N
+
 class ProjectMember(models.Model): 
     # projeto 
     project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='project_members') 

@@ -9,7 +9,9 @@
 
 {% block content %}
 <div class="row g-3">  {# grid responsiva #}
+  <h1>Seus projetos</h1>
   {% for project in projects %}
+    
     <div class="col-md-4 d-flex">  {# cada projeto ocupa 1/3 da linha no desktop #}
       <div class="card flex-fill"> {# cards #}
         
@@ -31,12 +33,14 @@
                     </p>
           </div>
 
-          {% if project.deadline %}
+          {% if project.deadline%}
             <p class="card-text fw-semibold">
-            <span>{{ project.deadline }}</span>
+            {{ project.deadline }}
+            </p>
           {% else %}
             <p class="card-text fw-semibold">
-            <span> Projeto sem prazo definido </span>
+            Projeto sem prazo definido 
+            </p>
           {% endif %}
 
           <!-- botões -->
@@ -52,8 +56,12 @@
 
       </div>
     </div>
+
+
+
   {% empty %}
     <p class="fw-bold">Não há nenhum projeto criado</p>
   {% endfor %}
+ 
 </div>
 {% endblock %}
