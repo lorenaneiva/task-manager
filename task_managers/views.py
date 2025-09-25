@@ -72,7 +72,7 @@ def invite(request, project_id):
     if request.method != 'POST':
         form = ProjectInvitationForm()
     else:
-        form = ProjectInvitationForm(request.POST, project=project)
+        form = ProjectInvitationForm(request.POST)
         form.instance.project = project
         form.instance.inviter = request.user
         if form.is_valid():

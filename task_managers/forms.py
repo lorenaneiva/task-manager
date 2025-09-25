@@ -41,11 +41,3 @@ class ProjectInvitationForm(forms.ModelForm):
     class Meta():
         model = ProjectInvitation
         fields = ['guest','role']
-    #construtor, lista de argumentos, dicionario com argumentos
-    def __init__(self, *args, **kwargs): 
-        project = kwargs.pop('project', None) # retirando a chave do dic.
-        # constr. da classe mae, criando os campos para acessa-los
-        super().__init__(*args, **kwargs) 
-        if project:
-            # filtrando o que aparece no campo
-            self.fields['assigned'].queryset = project.project_participants.all()
