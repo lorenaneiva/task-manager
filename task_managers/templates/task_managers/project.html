@@ -40,9 +40,9 @@
             {% for member in project.project_members.all %}
                 <div class="d-flex gap-3">
                   <div>{{member.participants.username}}</div> ->
-                  {% if can_invite %}
+                  {% if member.participants == project.owner %}
                   <div>Dono do projeto</div>
-                  {% elif member.participants.username in can_edit %}
+                  {% elif can_edit %}
                   <div>Participante do projeto</div>
                   {% else %}
                   <div>Visualizador do projeto</div>

@@ -46,7 +46,6 @@ def project(request, project_id):
     is_owner = (request.user == project.owner)
     can_edit = membership.role == 'participant' 
     can_invite = is_owner
-
     lists = project.lists.order_by('-date_added')
     context = {
         'project':project,
@@ -72,8 +71,6 @@ def new_project(request):
                     participants=request.user,
                     defaults={'role':'participant'}
                 )
-
-
             messages.success(request,'Projeto criado com sucesso!')
             return HttpResponseRedirect(reverse('projects'))
         
