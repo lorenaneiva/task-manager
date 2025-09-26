@@ -136,7 +136,7 @@ def invites_list(request):
     # traz os dados das FK  
     invites = (ProjectInvitation.objects
                .filter(guest=request.user, status='pending')   # Query
-               .select_related('project', 'inviter'))        # otimizando as buscas                         
+               .select_related('project', 'inviter'))        # otimizando as buscas                        
     context = {'invites':invites}
     return render (request, "task_managers/invites_list.html", context)
 
@@ -175,7 +175,35 @@ def invites_reject(request, pk):
         return redirect('invites_list')   
 
 
+
+###         members
+
+
+
+def participants(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    project_participants = (ProjectMember.objects.filter(project=project).prefetch_related('participants'))
+    if request.user == project.owner:
+        context = {
+            'project':project,
+            'project_participants':project_participants
+        }
+        return render (request, "task_managers/project_participants.html", context)
+
+def remove_participants(request, project_id, participant_id):
+    project = get_object_or_404(Project, pk=project_id)
+    if request.user != project.owner:
+        messages.error(request, 'Ação não permitida.')
+        return redirect('participants', project_id=project_id)
+    participant = get_object_or_404(ProjectMember, pk=participant_id, project=project)
+
+    if request.method == 'POST':
+        participant.delete()
+        messages.warning(request, 'Participante removido com sucesso!')
+        return redirect('participants', project_id=project_id)
+
 ###         lists
+
 
 
 @login_required

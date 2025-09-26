@@ -15,13 +15,16 @@
     <a href="{% url 'new_list' project.id %}" class="btn btn-outline-success">Nova lista</a>
     
     {% if request.user == project.owner %}
-    <a href="{% url 'invite' project.id %}" class="btn btn-outline-secondary">Convidar participante</a>
-  
+    
     <a href="{% url 'edit_project' project.id %}" class="btn btn-outline-primary">Editar o projeto</a>
+
+    <a href="{% url 'participants' project.id %}" class="btn btn-outline-secondary">participantes</a>
+    
     {% endif %}
   </div>
 
 <!-- Visualizar participantes do projeto atraves de um modal -->
+{% if request.user != project.owner %}
   <div>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#participantes">
       
@@ -67,6 +70,9 @@
       </div>
     </div>
   </div>
+{% endif %}
+
+  
 {% endblock header%}
 {% block content %}
 <!-- Listas -->
@@ -132,7 +138,6 @@
                       <form action="{% url 'delete_task' project.id task.id %}" method="post" class="m-0">
                         {% csrf_token %}
                       <button type="submit" class="btn btn-danger">Deletar</button>
-
                       </form>
                     </div>
                   </div>

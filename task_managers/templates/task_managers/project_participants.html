@@ -1,0 +1,48 @@
+{% extends "task_managers/base.html" %}
+
+{% block header %}
+<h1 class="fw-bold text-center">
+    <a href="{% url 'project' project.id %}"
+    class="link-offset-2 link-underline link-underline-opacity-0"
+    >Participantes</a>
+</h1>
+<h3 class="fw-bold text-center">Convide ou remova participantes do seu projeto</h3>
+<div>
+    <a href="{% url 'invite' project.id %}" class="btn btn-outline-secondary">Convidar participante</a>
+</div>
+{% endblock header %}
+
+{% block content%}
+
+    {% if project_participants %}
+     <div class="row g-3">
+        {% for p in project_participants %}
+            {% if p.participants != project.owner%}
+             <div class="col-md-4 d-flex">
+                <div class="card flex-fill">
+                    <div class="card-body d-flex flex-column">
+                     <h4 class="card-title fs-3">
+                        <div class="d-flex justify-content-center align-items-center">
+                         <span> 
+                            {{p}}
+                         </span>
+                        </div>
+                     </h4>
+                    <div>
+                        <form action="{% url 'remove_participants' project.id p.id %}" method="post">
+                         {% csrf_token %}
+                         <button type="submit" class="btn btn-outline-danger">remover</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                
+             </div>
+            {% endif %}
+        {% endfor %}
+    
+    {% else %}
+        <h3>não há outros participantes</h3>
+    {% endif %}
+    </div>
+{% endblock content%}
