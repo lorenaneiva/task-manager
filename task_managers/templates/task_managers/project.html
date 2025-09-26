@@ -1,14 +1,16 @@
 {% extends "task_managers/base.html" %}
 
-{% block content %}
-<h1 class="fw-bold text-center">{{ project }}</h1>
-
-{% if project.deadline %}
-  <h3>{{ project.deadline }}</h3>
-{% endif %}
+{% block header %}
+  <h1 class="fw-bold text-center">{{ project }}</h1>
+  <div class="d-flex justify-content-between">
+    {% if project.deadline %}
+    <h3>{{ project.deadline }}</h3>
+    {% endif %}
+    <h3>{{ project.owner}}</h3>
+  </div>
 
   <div class="d-flex justify-content-between">
-  
+  <!-- Botões de edição -->
   <div class="text-left mb-4">
     <a href="{% url 'new_list' project.id %}" class="btn btn-outline-success">Nova lista</a>
   
@@ -17,15 +19,16 @@
     <a href="{% url 'edit_project' project.id %}" class="btn btn-outline-primary">Editar o projeto</a>
   </div>
 
- 
 <!-- Visualizar participantes do projeto atraves de um modal -->
-<div class="text-left mb-4">
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#participantes">
-    <span class="material-symbols-outlined">
-      groups
-    </span>
-  </button>
-  
+  <div class="text-left mb-4">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#participantes">
+      <span class="material-symbols-outlined">
+        groups
+      </span>
+    </button>
+  </div> 
+</div> 
+
   <div class="modal" id="participantes" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -35,8 +38,15 @@
         </div>
         <div class="modal-body">         
             {% for member in project.project_members.all %}
-                <div>
-                  {{member.participants.username}}
+                <div class="d-flex gap-3">
+                  <div>{{member.participants.username}}</div> ->
+                  {% if can_invite %}
+                  <div>Dono do projeto</div>
+                  {% elif member.participants.username in can_edit %}
+                  <div>Participante do projeto</div>
+                  {% else %}
+                  <div>Visualizador do projeto</div>
+                  {% endif %}
                 </div>             
             {% empty %}
              
@@ -49,10 +59,9 @@
       </div>
     </div>
   </div>
-</div>     
-  
-</div>
-
+{% endblock header%}
+{% block content %}
+<!-- Listas -->
 <div class="row row-cols-1 row-cols-md-2 g-3">
   {% for l in lists %}
     <div class="col">

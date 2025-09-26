@@ -31,10 +31,11 @@ def projects(request):
                       .order_by('-date_added')
                       )
     has_member = member_projects.exists()
-    context = {'owner_projects':owner_projects,
-               'member_projects':member_projects,
-               'has_member':has_member
-               }
+    context = {
+            'owner_projects':owner_projects,
+            'member_projects':member_projects,
+            'has_member':has_member
+            }
     return render(request, 'task_managers/projects.html',context)
 
 @login_required
@@ -43,7 +44,7 @@ def project(request, project_id):
     membership = ProjectMember.objects.filter(project=project,participants=request.user).first()
                             
     is_owner = (request.user == project.owner)
-    can_edit = membership.role == 'participant'
+    can_edit = membership.role == 'participant' 
     can_invite = is_owner
 
     lists = project.lists.order_by('-date_added')
