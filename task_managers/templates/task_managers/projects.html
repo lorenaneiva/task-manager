@@ -62,8 +62,6 @@
       </div>
     </div>
 
-
-
   {% empty %}
     <p class="fw-bold">Não há nenhum projeto criado</p>
   {% endfor %}
@@ -75,7 +73,7 @@
   {% endif %}
   
   {% for project in member_projects %}
-  {% if request.user != project.owner %}
+  {% if has_member %}
   <div class="row g-3"> 
     <div class="col-md-4 d-flex">  {# cada projeto ocupa 1/3 da linha no desktop #}
       <div class="card flex-fill"> {# cards #}

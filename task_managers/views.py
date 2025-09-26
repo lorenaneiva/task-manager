@@ -24,7 +24,8 @@ def projects(request):
                       .order_by('-date_added')
                       )
     member_projects = (Project.objects
-                      .filter(project_members__participants=request.user) # busca os participantes
+                      .filter(project_members__participants=request.user)
+                      .exclude(owner=request.user)
                       .distinct() 
                       .select_related('owner') 
                       .order_by('-date_added')
