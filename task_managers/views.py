@@ -88,7 +88,7 @@ def edit_project (request, project_id):
     if form.is_valid():
         form.save()
         messages.success(request,'Projeto atualizado com sucesso!')
-        return HttpResponseRedirect(reverse('projects'))     
+        return HttpResponseRedirect(reverse('project', args=[project_id]))     
       
     context = {'form':form, 'project':project}
     return render(request, 'task_managers/edit_project.html',context) 
