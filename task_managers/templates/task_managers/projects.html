@@ -3,7 +3,13 @@
 {% block header %}
   <div class="text-left mb-4 d-flex justify-content-between">
     <a href="{% url 'new_project' %}" class="btn btn-outline-success">Novo projeto</a>
-    <a href="{% url 'invites_list' %}" class="btn btn-success">Convites pendentes</a>
+    <div class="d-flex">
+      <a href="{% url 'invites_list' %}" class="btn btn-success">
+        Convites pendentes 
+        <span class="material-symbols-outlined align-middle" >arrow_right</span>
+        <span class="badge text-light fs-6 align-middle">{{invites}}</span>
+      </a>
+    </div>
   </div>
 {% endblock header %}
 
@@ -35,7 +41,7 @@
                     {% else %}
               <span class="badge bg-success fs-6">{{ project.get_status_display }}</span>
                     {% endif %}
-                    </p>
+              </p>
           </div>
           <!-- prazo do card -->
           {% if project.deadline%}

@@ -31,10 +31,18 @@ def projects(request):
                       .order_by('-date_added')
                       )
     has_member = member_projects.exists()
+    # quantidade de convites pendentes do usuario
+    invites = (ProjectInvitation.objects
+               .filter(guest=request.user, status='pending')   
+               .select_related('project', 'inviter')
+               .count()
+               )
+                    
     context = {
             'owner_projects':owner_projects,
             'member_projects':member_projects,
-            'has_member':has_member
+            'has_member':has_member,
+            'invites':invites
             }
     return render(request, 'task_managers/projects.html',context)
 
