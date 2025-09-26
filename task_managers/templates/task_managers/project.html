@@ -13,10 +13,12 @@
   <!-- Botões de edição -->
   <div class="text-left mb-4">
     <a href="{% url 'new_list' project.id %}" class="btn btn-outline-success">Nova lista</a>
-  
+    
+    {% if request.user == project.owner %}
     <a href="{% url 'invite' project.id %}" class="btn btn-outline-secondary">Convidar participante</a>
   
     <a href="{% url 'edit_project' project.id %}" class="btn btn-outline-primary">Editar o projeto</a>
+    {% endif %}
   </div>
 
 <!-- Visualizar participantes do projeto atraves de um modal -->
