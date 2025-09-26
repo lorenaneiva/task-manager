@@ -163,7 +163,7 @@ def invites_reject(request, pk):
 
         invite.status = 'rejected'
         invite.save(update_fields=['status'])
-        messages.info(request, "Convite rejeitado")    
+        messages.warning(request, "Convite rejeitado")    
         return redirect('invites_list')   
 
 
@@ -203,7 +203,7 @@ def delete_list(request, project_id, list_id):
 
     if request.method == 'POST':
         list.delete()
-        messages.error(request,'Lista deletada com sucesso!')
+        messages.warning(request,'Lista deletada com sucesso!')
         return redirect('project', project_id=project_id)
     return render(request, 'task_managers/confirm_delete.html', {'list':list})
 
@@ -251,7 +251,7 @@ def delete_task(request, task_id, project_id):
 
     if request.method == 'POST':
         task.delete()
-        messages.error(request,'Tarefa deletada com sucesso!')
+        messages.warning(request,'Tarefa deletada com sucesso!')
         return redirect('project', project_id=project_id)
     return render(request, 'task_managers/confirm_delete.html', {'task':task})
 
