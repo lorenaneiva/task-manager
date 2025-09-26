@@ -94,9 +94,9 @@ def edit_project (request, project_id):
 def delete_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user == project.owner:
         project.delete()
-        messages.error(request,'Projeto deletado com sucesso!')
+        messages.success(request,'Projeto deletado com sucesso!')
         return redirect('projects')
     return render(request, 'task_managers/confirm_delete.html', {'project':project})
 
