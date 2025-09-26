@@ -71,10 +71,9 @@
   {% if has_member %}
     <h1>Projetos que você participa</h1>
   {% endif %}
-  
+  <div class="row g-3">
   {% for project in member_projects %}
   {% if has_member %}
-  <div class="row g-3"> 
     <div class="col-md-4 d-flex">  {# cada projeto ocupa 1/3 da linha no desktop #}
       <div class="card flex-fill"> {# cards #}
         
@@ -115,9 +114,9 @@
         </div>
       </div>
     </div>
-</div>
+
 {% endif %}
 {% endfor %}
- 
+</div>
 </div>
 {% endblock %}
