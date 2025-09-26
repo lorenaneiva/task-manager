@@ -82,7 +82,7 @@ def edit_project (request, project_id):
     project = get_object_or_404(Project, pk=project_id) #pk = primary key
 
     form = ProjectForm(request.POST or None, instance=project) 
-    if form.is_valid():
+    if form.is_valid() and request.user == project.owner:
         form.save()
         messages.success(request,'Projeto atualizado com sucesso!')
         return HttpResponseRedirect(reverse('project', args=[project_id]))     
