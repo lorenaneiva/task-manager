@@ -93,9 +93,7 @@ def edit_project (request, project_id):
     if form.is_valid() and request.user == project.owner:
         form.save()
         messages.success(request,'Projeto atualizado com sucesso!')
-        return HttpResponseRedirect(reverse('project', args=[project_id]))
-    else:
-        messages.warning(request, 'Só o dono do projeto pode editá-lo.')     
+        return HttpResponseRedirect(reverse('project', args=[project_id]))  
       
     context = {'form':form, 'project':project}
     return render(request, 'task_managers/edit_project.html',context) 
