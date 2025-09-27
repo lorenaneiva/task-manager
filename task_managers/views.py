@@ -219,7 +219,7 @@ def new_list(request, project_id):
     if request.method != 'POST':
         form = ListForm()
     else:
-        form = ListForm(request.POST, instance=List(project=project)) # instance para evitar erro
+        form = ListForm(request.POST, instance=List(project=project)) # ligando o form a um obj espc
         if form.is_valid():
             form.save()
             messages.success(request,'Lista criada com sucesso!')
@@ -232,17 +232,17 @@ def new_list(request, project_id):
 def edit_list(request, list_id):
     list = get_object_or_404(List, pk=list_id)
     form = ListForm(request.POST or None, instance=list)
-    project = Project.objects.get(id = list.project.id)
-    participant = ProjectMember.objects.get(project=project, participants=request.user)
+    
+    participant = ProjectMember.objects.get(project=list.project, participants=request.user)
 
     if participant.role == "viewer":
         messages.warning(request, "Você não tem permissão para editar listas.")
-        return HttpResponseRedirect(reverse('project', args=[project.id]))
+        return HttpResponseRedirect(reverse('project', args=[list.project.id]))
     
     if form.is_valid():
         form.save()
         messages.success(request,'Lista atualizada com sucesso!')
-        return HttpResponseRedirect(reverse('project', args=[project.id]))     
+        return HttpResponseRedirect(reverse('project', args=[list.project.id]))     
     
     context = {'form':form, 'list':list}
     return render(request, 'task_managers/edit_list.html',context)   
@@ -250,12 +250,11 @@ def edit_list(request, list_id):
 @login_required
 def delete_list(request, project_id, list_id):
     list = get_object_or_404(List, id=list_id)
-    project = Project.objects.get(id = list.project.id)
-    participant = ProjectMember.objects.get(project=project, participants=request.user)
+    participant = ProjectMember.objects.get(project=list.project, participants=request.user)
 
     if participant.role == "viewer":
         messages.warning(request, "Você não tem permissão para deletar listas.")
-        return HttpResponseRedirect(reverse('project', args=[project.id]))
+        return HttpResponseRedirect(reverse('project', args=[list.project.id]))
     
     if request.method == 'POST':
         list.delete()
@@ -278,6 +277,14 @@ def task(request, project_id, task_id):
 @login_required
 def new_task(request, list_id):
     list = List.objects.get(id = list_id)
+
+    project = list.project
+    participant = ProjectMember.objects.get(project=project, participants=request.user)
+
+    if participant.role == "viewer":
+        messages.warning(request, "Você não tem permissão para criar tarefas.")
+        return HttpResponseRedirect(reverse('project', args=[project.id]))
+
     if request.method != 'POST':
         form = TaskForm()
     else:
@@ -294,6 +301,13 @@ def new_task(request, list_id):
 def edit_task(request, project_id, task_id):
     task = get_object_or_404(Task, id=task_id)
     form = TaskForm(request.POST or None, instance=task)
+    
+    participant = ProjectMember.objects.get(project=task.list.project, participants=request.user)
+
+    if participant.role == "viewer":
+        messages.warning(request, "Você não tem permissão para editar tarefas.")
+        return HttpResponseRedirect(reverse('project', args=[task.list.project.id]))
+    
     if form.is_valid():
         form.save()
         messages.success(request, 'Tarefa atualizada com sucesso')
@@ -304,6 +318,12 @@ def edit_task(request, project_id, task_id):
 @login_required
 def delete_task(request, task_id, project_id):
     task = get_object_or_404(Task, id=task_id)
+    participant = ProjectMember.objects.get(project=task.list.project, participants=request.user)
+
+    if participant.role == "viewer":
+        messages.warning(request, "Você não tem permissão para deletar tarefas.")
+        return HttpResponseRedirect(reverse('project', args=[task.list.project.id]))
+
 
     if request.method == 'POST':
         task.delete()
