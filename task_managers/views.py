@@ -200,6 +200,8 @@ def remove_participants(request, project_id, participant_id):
         messages.warning(request, 'Participante removido com sucesso!')
         return redirect('participants', project_id=project_id)
 
+
+
 ###         lists
 
 
@@ -207,6 +209,13 @@ def remove_participants(request, project_id, participant_id):
 @login_required
 def new_list(request, project_id):
     project = Project.objects.get(id = project_id)
+
+    participant = ProjectMember.objects.get(project=project, participants=request.user)
+
+    if participant.role == "viewer":
+        messages.warning(request, "Você não tem permissão para criar listas.")
+        return HttpResponseRedirect(reverse('project', args=[project_id]))
+
     if request.method != 'POST':
         form = ListForm()
     else:
@@ -223,10 +232,17 @@ def new_list(request, project_id):
 def edit_list(request, list_id):
     list = get_object_or_404(List, pk=list_id)
     form = ListForm(request.POST or None, instance=list)
+    project = Project.objects.get(id = list.project.id)
+    participant = ProjectMember.objects.get(project=project, participants=request.user)
+
+    if participant.role == "viewer":
+        messages.warning(request, "Você não tem permissão para editar listas.")
+        return HttpResponseRedirect(reverse('project', args=[project.id]))
+    
     if form.is_valid():
         form.save()
         messages.success(request,'Lista atualizada com sucesso!')
-        return HttpResponseRedirect(reverse('project', args=[list.project.id]))     
+        return HttpResponseRedirect(reverse('project', args=[project.id]))     
     
     context = {'form':form, 'list':list}
     return render(request, 'task_managers/edit_list.html',context)   
@@ -234,7 +250,13 @@ def edit_list(request, list_id):
 @login_required
 def delete_list(request, project_id, list_id):
     list = get_object_or_404(List, id=list_id)
+    project = Project.objects.get(id = list.project.id)
+    participant = ProjectMember.objects.get(project=project, participants=request.user)
 
+    if participant.role == "viewer":
+        messages.warning(request, "Você não tem permissão para deletar listas.")
+        return HttpResponseRedirect(reverse('project', args=[project.id]))
+    
     if request.method == 'POST':
         list.delete()
         messages.warning(request,'Lista deletada com sucesso!')
