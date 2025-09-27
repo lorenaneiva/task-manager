@@ -6,9 +6,8 @@ from django.conf import settings
 
 
 def validate_deadline(value):
-    if value < date.today():
+    if value and value < date.today():
         raise ValidationError("Não é possível selecionar uma data passada.")
-
 
 class Project(models.Model):
     STATUS_CHOICES=[
@@ -16,7 +15,6 @@ class Project(models.Model):
     ("doing", "Fazendo"),
     ("done", "Feito"),
     ]
-    
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -29,6 +27,9 @@ class Project(models.Model):
     
     def __str__(self):
         return self.title
+    def clean(self):
+        if self.deadline and self.deadline < date.today():
+            raise ValidationError("Não é possível selecionar uma data passada.")
 
 # model intermediario N:N
 
@@ -77,7 +78,9 @@ class List(models.Model):
     def clean(self):
         if (self.deadline) and (self.project.deadline):    
             if self.deadline > self.project.deadline:
-                raise ValidationError("O prazo da lista não pode passar do prazo do projeto.") 
+                raise ValidationError("O prazo da lista não pode passar do prazo do projeto.")
+        if self.deadline and self.deadline < date.today():
+            raise ValidationError("Não é possível selecionar uma data passada.")
 
 class Task(models.Model):
     STATUS_CHOICES=[
@@ -116,6 +119,9 @@ class Task(models.Model):
         if (self.assigned): 
             if self.assigned.project != self.list.project: 
                 raise ValidationError("O projeto da tarefa deve ser o mesmo projeto do responsável.")
+            
+        if self.deadline and self.deadline < date.today():
+            raise ValidationError("Não é possível selecionar uma data passada.")
 
 class ProjectInvitation(models.Model): 
     # projeto 
