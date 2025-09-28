@@ -12,7 +12,9 @@ def index(request):
     return render(request, 'task_managers/index.html')
 
 
+
 ###         projects
+
 
 
 @login_required
@@ -109,7 +111,9 @@ def delete_project(request, project_id):
     return render(request, 'task_managers/confirm_delete.html', {'project':project})
 
 
+
 ###         convites
+
 
 
 @login_required
@@ -323,7 +327,6 @@ def delete_task(request, task_id, project_id):
     if participant.role == "viewer":
         messages.warning(request, "Você não tem permissão para deletar tarefas.")
         return HttpResponseRedirect(reverse('project', args=[task.list.project.id]))
-
 
     if request.method == 'POST':
         task.delete()
