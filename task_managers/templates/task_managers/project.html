@@ -71,9 +71,8 @@
     </div>
   </div>
 {% endif %}
-
-  
 {% endblock header%}
+
 {% block content %}
 <!-- Listas -->
 <div class="row row-cols-1 row-cols-md-2 g-3">
@@ -115,22 +114,37 @@
           </p>
 
           
-        <!--Tarefas-->
+<!--Tarefas-->
           <div class="row g-3">
             {% for task in l.tasks.all %}
               <div class="col-12">
                 <div class="card">
                   <div class="d-flex justify-content-between align-items-start p-3">
                     <div>
+            
+                      <!-- Nome da tarefa -->
+                      
                       <a href="{% url 'task' project.id task.id %}"
                          class="link-offset-2 link-underline link-underline-opacity-0">
                         {{ task }}
                       </a>
+
+                      <!-- Responsável da tarefa -->
+
+                      {% if task.assigned %}
+                      <p class="card-text fw-semibold mb-0">Responsável: {{task.assigned}}</p>
+                      {% else %}
+                      <p class="card-text fw-semibold mb-0">Sem responsável definido</p>
+                      {% endif %}
+                    
+                      <!-- Prazo da tarefa -->
+
                       {% if task.deadline %}
                         <p class="card-text fw-semibold mb-0">{{ task.deadline }}</p>
                       {% else %}
-                        <p class="card-text fw-semibold mb-0">Tarefa sem prazo definido</p>
+                        <p class="card-text fw-semibold mb-0">Sem prazo definido</p>
                       {% endif %}
+                      
                     </div>
                     <!--botões-->
                     <div class="d-flex gap-2">
