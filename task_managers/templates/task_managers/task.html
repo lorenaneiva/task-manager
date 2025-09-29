@@ -19,6 +19,7 @@
                 {{task}}
                 </a>
             </h2>
+            {% if membership.role != 'viewer' %}
             <div class="d-flex gap-2">
                     <a href="{% url 'edit_task' task.list.id task.id  %}" class="btn btn-outline-primary">Editar</a>
                     <form action="{% url 'delete_task' task.list.project.id task.id %}" method="post" class="m-0">
@@ -26,6 +27,7 @@
                     <button type="submit" class="btn btn-danger">Deletar</button>
                     </form>
             </div>
+            {% endif %}
             <p class="card-text">
                 {% if task.get_status_display == "A fazer" %}
                     <span class="badge bg-warning text-dark fs-6">{{ task.get_status_display }}</span>

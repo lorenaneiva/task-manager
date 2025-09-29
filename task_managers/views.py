@@ -276,7 +276,10 @@ def delete_list(request, project_id, list_id):
 @login_required
 def task(request, project_id, task_id):
     task = get_object_or_404(Task, id=task_id)
-    context = {'task': task}
+    project = task.list.project
+    membership = ProjectMember.objects.filter(project=project,participants=request.user).first()
+
+    context = {'task': task, 'membership' : membership }
     return render(request, 'task_managers/task.html', context)
 
 @login_required
