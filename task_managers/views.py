@@ -62,6 +62,7 @@ def project(request, project_id):
         'lists':lists, 
         'can_edit':can_edit,
         'can_invite':can_invite,
+        'membership':membership
         }
     return render(request, 'task_managers/project.html', context)   
 

@@ -12,14 +12,13 @@
 <div class="d-flex justify-content-between mb-4">
   <!-- Botões de edição -->
   <div class="text-left mb-4">
+    {% if membership.role != 'viewer' or request.user == project.owner%}
     <a href="{% url 'new_list' project.id %}" class="btn btn-outline-success">Nova lista</a>
+    {% endif %}
     
     {% if request.user == project.owner %}
-    
     <a href="{% url 'edit_project' project.id %}" class="btn btn-outline-primary">Editar o projeto</a>
-
     <a href="{% url 'participants' project.id %}" class="btn btn-outline-secondary">participantes</a>
-    
     {% endif %}
   </div>
 
@@ -86,12 +85,13 @@
             <h2 class="m-0">{{ l.title }}</h2>
 
             <!-- Botões -->
+            {% if membership.role != 'viewer' or request.user == project.owner%}
             <div class="d-flex gap-2 flex-shrink-0">
               <a href="{% url 'new_task' l.id %}" class="btn btn-outline-success">adicionar tarefa</a>
               <a href="{% url 'edit_list' l.id %}" class="btn btn-outline-primary">Editar</a>
               <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmaçãolista">Deletar</button>
-              
             </div>
+            {% endif %}
 
             <!-- Modal de confirmação -->
                       <div class="modal" id="confirmaçãolista" tabindex="-1">
@@ -176,8 +176,9 @@
                         <span class="badge bg-primary fs-6">Sem responsável definido</span>
                         {% endif %}
                       </div>
-                    </div>   
+                    </div>
 
+                    {% if membership.role != 'viewer' or request.user == project.owner%}
                     <!-- Botões da tarefa -->
                     <div class="d-flex gap-2">
                       <a href="{% url 'edit_task' task.list.id task.id %}" class="btn btn-outline-primary">Editar</a>
@@ -210,9 +211,9 @@
                           </div>
                         </div>
                         </div>
-                      </div> 
-                      
+                      </div>  
                     </div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
