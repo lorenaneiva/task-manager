@@ -44,10 +44,41 @@
                         {% csrf_token %}
                             <button type="submit" class="btn btn-outline-primary">Aceitar</button>
                         </form>
-                        <form action="{% url 'invites_reject' inv.pk %}" method="post">
-                        {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger">Rejeitar</button>
-                        </form>
+                        <button type="submit" class="btn btn-danger" 
+                         data-bs-toggle="modal" data-bs-target="#confirmação">
+                         Rejeitar
+                         </button>
+
+                        <div class="modal" id="confirmação" tabindex="-1">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title">Confirme</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">         
+                                        
+                                        <div class="d-flex flex-column gap-3">
+                                            <p>Você tem certeza que deseja rejeitar o convite?</p>
+                                        </div>             
+
+                                </ul>
+                                </div>
+                                <div class="modal-footer">
+                                <form 
+                                action="{% url 'invites_reject' inv.pk %}" 
+                                method="post"
+                                    >
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">
+                                    remover
+                                    </button>
+                                </form>   
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div> 
                     </div>
                 </div>
             </div>
