@@ -13,19 +13,21 @@
 {%block content%}
     {% if invites %}
     <div class="row g-3">
-     {% for inv in invites %}
-         <div class="col-md-4 d-flex">
-             <div class="card flex-fill">
-                 <div class="card-body d-flex flex-column">
-                    <h4 class="card-title fs-3">
-                     <div class="d-flex justify-content-center align-items-center">
-                        <div> 
-                         <strong>{{inv.project}}</strong>
-                         <span class="material-symbols-outlined">mail</span>
-                        </div>
-                     </div>
-                    </h4>
-                <div class="d-flex justify-content-between">
+    {% for inv in invites %}
+        <div class="col-md-4 d-flex">
+        <div class="card flex-fill">
+          <div class="card-body d-flex flex-column">
+            <!-- titulo do projeto -->
+            <h4 class="card-title fs-3">
+                <div class="d-flex justify-content-center align-items-center">
+                <div> 
+                    <strong>{{inv.project}}</strong>
+                    <span class="material-symbols-outlined">mail</span>
+                </div>
+                </div>
+            </h4>
+            <!-- Infos do projeto -->
+            <div class="d-flex justify-content-between">
                 {% if project.deadline%}
                 <p class="card-text fw-semibold">
                 {{ project.deadline }}
@@ -39,51 +41,48 @@
                 Projeto de: <br> <strong>{{inv.project.owner}}</strong>
                 </p>
             </div>
-                    <div class="d-flex justify-content-between">
-                        <form action="{% url 'invites_accept' inv.pk %}" method="post">
-                        {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-primary">Aceitar</button>
-                        </form>
-                        <button type="submit" class="btn btn-danger" 
-                         data-bs-toggle="modal" data-bs-target="#confirmação">
-                         Rejeitar
-                         </button>
-
-                        <div class="modal" id="confirmação" tabindex="-1">
-                            <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title">Confirme</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">         
-                                        
-                                        <div class="d-flex flex-column gap-3">
-                                            <p>Você tem certeza que deseja rejeitar o convite?</p>
-                                        </div>             
-
-                                </ul>
-                                </div>
-                                <div class="modal-footer">
-                                <form 
-                                action="{% url 'invites_reject' inv.pk %}" 
-                                method="post"
-                                    >
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">
-                                    remover
-                                    </button>
-                                </form>   
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div> 
+            <!-- Botões -->
+            <div class="d-flex justify-content-between">
+                <form action="{% url 'invites_accept' inv.pk %}" method="post">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary">Aceitar</button>
+                </form>
+                <button type="submit" class="btn btn-danger" 
+                data-bs-toggle="modal" data-bs-target="#confirmação">
+                Rejeitar
+                </button>
+            <!-- Modal de confirmação -->
+                <div class="modal" id="confirmação" tabindex="-1">
+                 <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title">Confirme</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <div class="d-flex flex-column gap-3">
+                            <p>Você tem certeza que deseja rejeitar o convite?</p>
+                        </div>             
+                        </div>
+                        <div class="modal-footer">
+                        <form 
+                        action="{% url 'invites_reject' inv.pk %}" 
+                        method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                            remover
+                            </button>
+                        </form>   
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
-                </div>
+                 </div>
+                </div> 
             </div>
-         </div>
-     {% endfor %}    
+          </div>
+        </div>
+        </div>
+    {% endfor %}    
     </div>
     {% else %}
         <p class="text-center m-5">Você não tem convites pendentes!</p>

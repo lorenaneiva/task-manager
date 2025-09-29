@@ -74,6 +74,7 @@
 {% endblock header%}
 
 {% block content %}
+
 <!-- Listas -->
 <div class="row row-cols-1 row-cols-md-2 g-3">
   {% for l in lists %}
@@ -84,7 +85,7 @@
           <div class="d-flex justify-content-between align-items-start gap-2">
             <h2 class="m-0">{{ l.title }}</h2>
 
-            <!--botões-->
+            <!-- Botões -->
             <div class="d-flex gap-2 flex-shrink-0">
               <a href="{% url 'new_task' l.id %}" class="btn btn-outline-success">adicionar tarefa</a>
               <a href="{% url 'edit_list' l.id %}" class="btn btn-outline-primary">Editar</a>
@@ -107,7 +108,7 @@
                           </div>
                           <div class="modal-footer">
                             <form 
-                            action="{% url 'delete_list' project.id l.id%}" 
+                            action="{% url 'delete_list' project.id l.id %}" 
                             method="post"
                               >
                                 {% csrf_token %}
@@ -131,7 +132,7 @@
           {% endif %}
 
 
-          <!--Status da lista-->
+          <!-- Status da lista -->
           <p class="card-text mb-3">
             {% if l.get_status_display == "A fazer" %}
               <span class="badge bg-warning text-dark fs-6">{{ l.get_status_display }}</span>
@@ -143,7 +144,7 @@
           </p>
 
           
-<!--Tarefas-->
+          <!-- Tarefas -->
           <div class="row g-3">
             {% for task in l.tasks.all %}
               <div class="col-12">
@@ -177,9 +178,9 @@
                       </div>
                     </div>   
 
-                    <!-- botões da tarefa -->
+                    <!-- Botões da tarefa -->
                     <div class="d-flex gap-2">
-                      <a href="{% url 'edit_task' task.list.id task.id  %}" class="btn btn-outline-primary">Editar</a>
+                      <a href="{% url 'edit_task' task.list.id task.id %}" class="btn btn-outline-primary">Editar</a>
                       <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmação">Deletar</button>
 
                     <!-- Modal de confirmação -->
