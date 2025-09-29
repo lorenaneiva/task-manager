@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,20 +45,6 @@ INSTALLED_APPS = [
     'django_material_icons',
 ]
 
-JAZZMIN_SETTINGS = {
-    "show_ui_builder": True
-     }
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "body_small_text": False,
-    "brand_small_text": True,
-    "brand_colour": "navbar-dark",
-    "accent": "accent-info",
-    "navbar": "navbar-dark",
-    "sidebar": "sidebar-dark-primary",
-    "theme": "darkly",
-}
 
 
 MIDDLEWARE = [

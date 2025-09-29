@@ -13,7 +13,6 @@
 
 * Django 5.2.6
 * django-bootstrap5
-* django-jazzmin
 * django-material-icons
 
 ## 📦 Instalação
