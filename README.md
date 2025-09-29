@@ -7,6 +7,7 @@
 * Cadastro de **usuários**
 * Criação e gerenciamento de **projetos**
 * **Tarefas** com prazo, status e responsável
+* **Convites** para outras pessoas participarem dos seus projetos.
 
 ## 🛠️ Tecnologias
 
