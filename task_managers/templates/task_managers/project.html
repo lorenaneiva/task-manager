@@ -213,7 +213,7 @@
                     {% if membership.role != 'viewer' or request.user == project.owner%}
                     <!-- Botões da tarefa -->
                     <div class="d-flex gap-2">
-                      <a href="{% url 'edit_task' task.list.id task.id %}" class="btn btn-outline-primary">Editar</a>
+                      <a href="{% url 'task' task.list.project.id task.id %}" class="btn btn-outline-primary">Visualizar</a>
                       <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmação">Deletar</button>
 
                     <!-- Modal de confirmação -->
