@@ -41,3 +41,4 @@ class ProjectInvitationForm(forms.ModelForm):
     class Meta():
         model = ProjectInvitation
         fields = ['guest','role']
+        labels = {'role':'tipo de participação', 'guest':'convidado'}
