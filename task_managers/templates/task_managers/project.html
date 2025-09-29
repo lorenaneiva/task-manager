@@ -83,15 +83,44 @@
 
           <div class="d-flex justify-content-between align-items-start gap-2">
             <h2 class="m-0">{{ l.title }}</h2>
+
             <!--botões-->
             <div class="d-flex gap-2 flex-shrink-0">
               <a href="{% url 'new_task' l.id %}" class="btn btn-outline-success">adicionar tarefa</a>
               <a href="{% url 'edit_list' l.id %}" class="btn btn-outline-primary">Editar</a>
-              <form action="{% url 'delete_list' project.id l.id %}" method="post" class="m-0">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Deletar</button>
-              </form>
+              <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmaçãolista">Deletar</button>
+              
             </div>
+
+            <!-- Modal de confirmação -->
+                      <div class="modal" id="confirmaçãolista" tabindex="-1">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Confirme</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">               
+                           <div class="d-flex flex-column gap-3">
+                            <p>Voce tem certeza que deseja excluir a lista <strong>{{ l }}?</strong> </p>
+                           </div>             
+                          </div>
+                          <div class="modal-footer">
+                            <form 
+                            action="{% url 'delete_list' project.id l.id%}" 
+                            method="post"
+                              >
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">
+                                remover
+                                </button>
+                            </form>   
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                        </div>
+                      </div> 
+
           </div>
 
           <!--Prazo da lista-->
@@ -163,7 +192,7 @@
                           </div>
                           <div class="modal-body">               
                            <div class="d-flex flex-column gap-3">
-                            <p>Voce tem certeza que deseja excluir a tarefa <strong>{{task}}</strong>? </p>
+                            <p>Voce tem certeza que deseja excluir a tarefa {{task}}? </p>
                            </div>             
                           </div>
                           <div class="modal-footer">
