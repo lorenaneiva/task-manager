@@ -126,6 +126,7 @@ def invite(request, project_id):
         form = ProjectInvitationForm(request.POST)
         form.instance.project = project
         form.instance.inviter = request.user
+
         if form.is_valid():
             form.save()
             messages.success(request,'Usuário convidado com sucesso!')

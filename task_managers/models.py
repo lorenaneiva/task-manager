@@ -163,36 +163,37 @@ class ProjectInvitation(models.Model):
         choices=ROLE_CHOICES, 
         default='participant' )
     
-    def clean(self): 
-        # validação de convites 
-        if self.inviter != self.project.owner: 
-            raise ValidationError("Apenas o dono do projeto pode convidar.") 
-        
-        if self.guest == self.inviter: 
-            raise ValidationError("Você não pode enviar o convite para si mesmo.") 
-        
-        # bloqueio de convites para já membros 
-        if self.guest: 
-            # procura as instancias, dentro dos campos, numa mesma linha 
-            is_member = ProjectMember.objects.filter( 
-                project = self.project, 
-                participants = self.guest ).exists() # -> retorna True (se achar) ou False (se não) 
-            
-            if is_member: 
-                raise ValidationError("Usuário já é membro deste projeto.") 
-            # bloqueio de convites duplicados 
-            if self.status == 'pending': 
-                qs = ProjectInvitation.objects.filter( 
-                    project = self.project, 
-                    guest = self.guest, 
-                    status='pending' ) 
-                if self.pk: 
-                    # prevenção de erro 
-                    # # exclude remove a qs especifica, para nao contar com o proprio registro 
-                    qs = qs.exclude(pk=self.pk) 
+    def clean(self):
+        # Regra do dono: só valida se project e inviter já existem
+        if self.project_id and self.inviter_id:
+            if self.inviter != self.project.owner:
+                raise ValidationError("Apenas o dono do projeto pode convidar.")
 
-                if qs.exists(): # se existir -> erro 
-                        raise ValidationError("Já existe um convite pendente para este usuário.") 
-    
-    def __str__(self): 
-        return self.guest.username
+        # Não pode convidar a si mesmo (só se ambos existem)
+        if self.inviter_id and self.guest_id and self.inviter_id == self.guest_id:
+            raise ValidationError("Você não pode enviar o convite para si mesmo.")
+
+        # Regras que dependem de project E guest – só rodam se ambos existem
+        if self.project_id and self.guest_id:
+            is_member = ProjectMember.objects.filter(
+                project_id=self.project_id,
+                participants_id=self.guest_id,
+            ).exists()
+            if is_member:
+                raise ValidationError("Usuário já é membro deste projeto.")
+
+            if self.status == "pending":
+                qs = ProjectInvitation.objects.filter(
+                    project_id=self.project_id,
+                    guest_id=self.guest_id,
+                    status="pending",
+                )
+                if self.pk:
+                    qs = qs.exclude(pk=self.pk)
+                if qs.exists():
+                    raise ValidationError("Já existe um convite pendente para este usuário.")
+
+    def __str__(self):
+        # Evita acessar a relação quando ainda não foi definida
+        nome = self.guest.username if self.guest_id else "(sem convidado)"
+        return f"Convite para {nome}"

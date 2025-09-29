@@ -1,5 +1,6 @@
 from django import forms
 from .models import Project, List, Task, ProjectInvitation
+from django.contrib.auth.models import User
 
 class ProjectForm(forms.ModelForm):
     deadline = forms.DateField(
@@ -38,7 +39,26 @@ class TaskForm(forms.ModelForm):
         labels = {'title': 'Nome', 'status': 'Status'}
 
 class ProjectInvitationForm(forms.ModelForm):
+
+    guest_username = forms.CharField(label="convidado", max_length=150)
+
     class Meta():
         model = ProjectInvitation
-        fields = ['guest','role']
-        labels = {'role':'tipo de participação', 'guest':'convidado'}
+        fields = ['guest_username','role']
+        labels = {'role':'tipo de participação'}
+
+    # form.is_valid()
+    def clean(self):
+        cleaned = super().clean() # validação padrão do django
+        username = cleaned.get("guest_username", "").strip() # valor digitado no campo
+
+        if not username:
+            raise forms.ValidationError("Digite o username do convidado")
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise forms.ValidationError("Usuário não encontrado")
+        self.instance.guest = user
+
+        return cleaned
+    
