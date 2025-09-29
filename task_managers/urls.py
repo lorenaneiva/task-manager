@@ -20,6 +20,7 @@ urlpatterns = [
     # members
     path('projects/<int:project_id>/participants', views.participants, name='participants'),
     path('projects/<int:project_id>/<int:participant_id>/remove_participants', views.remove_participants, name='remove_participants'),
+    path('project/<int:project_id>/exit_project', views.exit_project, name='exit_project'),
 
     #taskslists
     path('newlist/<int:project_id>', views.new_list, name='new_list'), 

@@ -205,8 +205,14 @@ def remove_participants(request, project_id, participant_id):
         messages.warning(request, 'Participante removido com sucesso!')
         return redirect('participants', project_id=project_id)
 
+def exit_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    participant = ProjectMember.objects.filter(project=project, participants=request.user)
 
-
+    if request.method == 'POST':
+        participant.delete()
+        messages.warning(request, 'Você saiu do projeto com sucesso!')
+        return redirect('projects')
 ###         lists
 
 
