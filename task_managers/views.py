@@ -17,7 +17,7 @@ def index(request):
 
 
 
-@login_required
+@login_required # funções que recebem funções
 def projects(request):
     owner_projects = (Project.objects
                       .filter(owner=request.user)

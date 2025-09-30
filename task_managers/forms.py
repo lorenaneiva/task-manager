@@ -1,5 +1,5 @@
 from django import forms
-from .models import Project, List, Task, ProjectInvitation
+from .models import Project, List, Task, ProjectInvitation, ProjectMember
 from django.contrib.auth.models import User
 
 class ProjectForm(forms.ModelForm):
@@ -32,7 +32,7 @@ class TaskForm(forms.ModelForm):
         widget=forms.DateInput(attrs={'type':'date'}, format='%Y-%m-%d'),
         input_formats=['%Y-%m-%d'],
         label='Prazo')
-    
+
     class Meta():
         model = Task
         fields = ['title', 'status', 'deadline', 'assigned', 'description',]
