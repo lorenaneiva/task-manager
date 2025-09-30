@@ -38,6 +38,16 @@ class TaskForm(forms.ModelForm):
         fields = ['title', 'status', 'deadline', 'assigned', 'description',]
         labels = {'title': 'Nome', 'status': 'Status'}
 
+    def __init__(self, *args, **kwargs):
+        project = kwargs.pop('project', None)
+        super().__init__(*args, **kwargs)
+        if project:
+            self.fields['assigned'].queryset = (ProjectMember.objects
+                                                .filter(project=project)
+                                                .distinct('participants'))
+        self.fields['assigned'].required = False
+        self.fields['description'].widget.attrs.update({'rows':6})
+
 class ProjectInvitationForm(forms.ModelForm):
 
     guest_username = forms.CharField(label="convidado", max_length=150)

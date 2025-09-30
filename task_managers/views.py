@@ -19,10 +19,11 @@ def index(request):
 
 @login_required # funções que recebem funções
 def projects(request):
-    owner_projects = (Project.objects
+    #qs descreve a consulta
+    owner_projects = (Project.objects 
                       .filter(owner=request.user)
                       .distinct() # evita duplicação
-                      .select_related('owner') # otimização de busca da FK
+                      .select_related('owner') # otimização de busca da FK 
                       .order_by('-date_added')
                       )
     member_projects = (Project.objects
@@ -51,17 +52,12 @@ def projects(request):
 @login_required
 def project(request, project_id):
     project = Project.objects.get(id = project_id)
-    membership = ProjectMember.objects.filter(project=project,participants=request.user).first()
-                            
-    is_owner = (request.user == project.owner)
-    can_edit = membership.role == 'participant' 
-    can_invite = is_owner
+    membership = ProjectMember.objects.filter(project=project,participants=request.user).first()         
     lists = project.lists.order_by('-date_added')
+
     context = {
         'project':project,
         'lists':lists, 
-        'can_edit':can_edit,
-        'can_invite':can_invite,
         'membership':membership
         }
     return render(request, 'task_managers/project.html', context)   

@@ -84,9 +84,9 @@
                   <div>{{member.participants.username}}</div> ->
                   {% if member.participants == project.owner %}
                   <div>Dono do projeto</div>
-                  {% elif can_edit %}
+                  {% elif member.role == 'participant' %}
                   <div>Participante do projeto</div>
-                  {% else %}
+                  {% elif member.role == 'viewer' %}
                   <div>Visualizador do projeto</div>
                   {% endif %}
                 </div>             
