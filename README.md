@@ -1,31 +1,31 @@
 # TasKnot
 
-**TasKnot** é uma aplicação web para **gerenciamento de tarefas**, desenvolvida no desafio da **startup Veloz**.
+**TasKnot** is a web application for **task management**, developed during the **Veloz startup challenge**.
 
-## 🚀 Funcionalidades
+## 🚀 Features
 
-* Cadastro de **usuários**
-* Criação e gerenciamento de **projetos**
-* **Tarefas** com prazo, status e responsável
-* **Convites** para outras pessoas participarem dos seus projetos.
+* **User** registration and authentication  
+* Creation and management of **projects**  
+* **Tasks** with deadlines, status, and assigned users  
+* **Invitations** to collaborate with other people on your projects
 
-## 🛠️ Tecnologias
+## 🛠️ Technologies
 
-* Django 5.2.6
-* django-bootstrap5
+* Django 5.2.6  
+* django-bootstrap5  
 * django-material-icons
 
-## 📦 Instalação
+## 📦 Installation
 
 ```bash
 git clone <https://github.com/lorenaneiva/task-manager>
 cd TasKnot
 python -m venv venv
-source venv/bin/activate   # ou venv\Scripts\activate no Windows
+source venv/bin/activate   # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
-```
+
 
 Acesse em: [http://localhost:8000]
 
